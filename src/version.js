@@ -39,19 +39,31 @@ function getPriorReleaseCommit(tagPrefix, fallbackToNoPrefixSearch) {
     .filter(tagObj => tagObj.semverValue !== null && semver.prerelease(tagObj.semverValue) === null)
     .sort((a, b) => semver.rcompare(a.semverValue, b.semverValue));
 
-  for (let i = 0; i < semverReleaseTags.length; i++) {
-    const candidateTagObj = semverReleaseTags[i];
-    if (git.isAncestor(candidateTagObj.tag, 'HEAD')) {
-      const commitMetadata = git.commitMetadata(candidateTagObj.tag);
-      return {
-        ...commitMetadata,
-        semver: candidateTagObj.semverValue
-      };
-    } else {
-      core.info(`Skipping ${candidateTagObj.tag} because it is not an ancestor of HEAD`);
-    }
+  const candidateTagObj = semverReleaseTags.length > 0 ? semverReleaseTags[0] : null;
+
+  if (candidateTagObj === null) {
+    return null;
   }
-  return null;
+
+  const commitMetadata = git.commitMetadata(candidateTagObj.tag);
+  return {
+    ...commitMetadata,
+    semver: candidateTagObj.semverValue
+  };
+
+  // for (let i = 0; i < semverReleaseTags.length; i++) {
+  //   const candidateTagObj = semverReleaseTags[i];
+  //   if (git.isAncestor(candidateTagObj.tag, 'HEAD')) {
+  //     const commitMetadata = git.commitMetadata(candidateTagObj.tag);
+  //     return {
+  //       ...commitMetadata,
+  //       semver: candidateTagObj.semverValue
+  //     };
+  //   } else {
+  //     core.info(`Skipping ${candidateTagObj.tag} because it is not an ancestor of HEAD`);
+  //   }
+  // }
+  // return null;
 }
 
 /**
