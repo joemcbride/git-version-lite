@@ -30,7 +30,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
         with:
           ref: main
           fetch-depth: 0
@@ -96,7 +96,7 @@ jobs:
 
       - name: Checkout
         if: env.HAS_CODE_CHANGES == 'true'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4.1.1
 
       # -----------------------------------
       # Check if action has been recompiled
